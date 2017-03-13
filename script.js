@@ -76,13 +76,6 @@ var createMouseDot = function(){
     };
 };
 
-var clearsvg = function(){
-    while(img.lastChild){
-	img.removeChild(img.lastChild);
-	cirList.pop(img.lastChild);
-    };
-};
-
 // Deprecated animation :(
 
 // var animate = function(cir){
@@ -110,14 +103,14 @@ var split = function(cir){
 	var x = cir.cx["baseVal"]["value"];
 	var y = cir.cy["baseVal"]["value"];
 	var c1 = createDot(x,y,Math.floor(r/2));
-	var c2 = createDot(x,y,Math.floor(r/2));
+	//var c2 = createDot(x,y,Math.floor(r/2));
 	c1.clicked = prevClicked;
-	c2.clicked = prevClicked;
-	c2.directionX *= -1;
-	c2.directionY *= -1;
+	//c2.clicked = prevClicked;
+	//c2.directionX *= -1;
+	//c2.directionY *= -1;
 
 	img.appendChild(c1);
-	img.appendChild(c2);
+	//img.appendChild(c2);
     };
     cirList.pop(cir);
     img.removeChild(cir);
@@ -140,17 +133,25 @@ var lineCheck = function(line,cir){
     //console.log(deltaCx);
     var deltaCy = cy - y1;
     var curCD = (deltaCy/deltaCx);
-    
-    if(/*prevCD < 0 &&*/ (prevCD - prevD) < 0 && (curCD - prevD) > 0){
-	//split(cir);
-	//console.log("passed");
-    };
-    
-    if(/*prevCD > 0 &&*/ (prevCD - prevD) > 0 && (curCD - prevD) < 0){
-	//split(cir);
-	console.log("passed");
-    };
 
+    var deltaPCDD = prevCD - prevD;
+    var deltaCCDD = curCD - prevD;
+    if(/*prevCD < 0 &&*/ (deltaPCDD) < 0 && (deltaCCDD) > 0 && deltaPCDD != (-1/0)){
+	console.log("entered");
+	// console.log("case1");
+	// console.log(deltaPCDD);
+	// console.log(deltaCCDD);
+	// //split(cir);
+	// console.log("passed");
+    };
+    
+    if(/*prevCD > 0 &&*/ (deltaPCDD) > 0 && (deltaCCDD) < 0 && deltaCCDD != (-1/0)){ // deltaCCDD != (-1/0) prevents bug of triggering when dot is above x1
+	// console.log("case2");
+	// console.log(deltaPCDD);
+	// console.log(deltaCCDD);
+	// //split(cir);
+	// console.log("passed");
+    };
     prevCD = (deltaCy/deltaCx);
 }
 
@@ -224,6 +225,14 @@ var moveDots = function(){
 	};
     };
     var id = setInterval(frame,10);
+};
+
+var clearsvg = function(){
+    while(img.lastChild){
+	img.removeChild(img.lastChild);
+	cirList.pop(img.lastChild);
+    };
+    line = drawLine();
 };
 
 clear.addEventListener("click",clearsvg);
